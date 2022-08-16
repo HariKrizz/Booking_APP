@@ -1,9 +1,9 @@
 package main
 
 import (
+	"Booking_APP/common"
 	"fmt"
 	"strings"
-	"github.com/HariKrizz/Booking_APP"
 )
 
 const conferenceTickets int = 250
@@ -19,7 +19,7 @@ func main() {
 	for {
 
 		firstName, lastName, email, userTickets := getUserInput()
-		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(firstName, lastName, email, userTickets)
+		isValidName, isValidEmail, isValidTicketNumber := common.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
 		if isValidName && isValidEmail && isValidTicketNumber {
 
@@ -99,6 +99,5 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 	fmt.Printf("Thank you %v %v for booking %d tickets for the conference. You will receive confirmation email at %v.\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 }
-
 
 // if we need to run multiple files in go use "go run ."
