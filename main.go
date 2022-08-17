@@ -3,14 +3,21 @@ package main
 import (
 	"Booking_APP/common"
 	"fmt"
-	"strings"
 )
 
 const conferenceTickets int = 250
 
 var conferenceName = "GDG India"
 var remainingTickets uint = 250
-var bookings = []string{}
+//var bookings = make([]map[string]string, 0)  //Initialized a list of maps
+var bookings = make([]userData, 0)
+
+type userData struct  {
+	firstName 			string 
+	lastName 			string 
+	email 				string 
+	number_of_tickets 	uint
+}
 
 func main() {
 
@@ -24,6 +31,7 @@ func main() {
 		if isValidName && isValidEmail && isValidTicketNumber {
 
 			bookTicket(userTickets, firstName, lastName, email)
+			sendTicket(userTickets, firstName, lastName, email)
 
 			f_names := getFirstName()
 			fmt.Printf("List of successful bookings are: %v\n", f_names)
@@ -64,8 +72,7 @@ func getFirstName() []string { // input parameters and output parameters
 	firstNames := []string{}
 
 	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking.firstName)
 	}
 	return firstNames
 }
@@ -94,10 +101,32 @@ func getUserInput() (string, string, string, uint) {
 
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	var userData = userData {
+		firstName : firstName,
+		lastName : lastName,
+		email : email,
+		number_of_tickets: userTickets,
+	}
+	
+	//Mapping user  // if we need to run multiple files in go use "go run ."
+                      //keys  //values
+	// var userData = make(map[string]string)
+	// userData["firstName"] = firstName
+	// userData["lastName"] = lastName
+	// userData["email"] = email
+	// userData["number_of_tickets"] = strconv.FormatUint(uint64(userTickets), 10)
+	
+	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings: %v\n", bookings)
 
 	fmt.Printf("Thank you %v %v for booking %d tickets for the conference. You will receive confirmation email at %v.\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 }
 
-// if we need to run multiple files in go use "go run ."
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	var ticket = fmt.Sprintf("%v tickets for %v %v",  userTickets, firstName, lastName)
+	fmt.Println("********************")
+	fmt.Printf("Sending ticket:\n %v\n To email address: %v\n", ticket, email)
+	fmt.Println("********************")
+}
